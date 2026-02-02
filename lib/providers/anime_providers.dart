@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
+import 'package:movies_app/models/models.dart';
 
 class AnimeProvider extends ChangeNotifier {
+  List<Anime> onDisplayAnime = [];
   AnimeProvider() {
     print('Proveedor de animes inicializado.');
     this.getOnDisplayAnime();
@@ -13,19 +14,13 @@ class AnimeProvider extends ChangeNotifier {
     var url =
         // Buscamos los animes top de temporada
         Uri.https('api.jikan.moe', '/v4/top/anime');
-    // Await the http get response, then decode the json-formatted response.
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonResponse =
-          convert.jsonDecode(response.body) as Map<String, dynamic>;
-      final List<dynamic> listaAnimes = jsonResponse['data'];
+    // Usamos data porque los resultados de esta API se llaman data.
+    final data = await http.get(url);
+    // Primero cogemos todo el texto del JSON, usamos decode para procesarlo
+    // y luego usamos nuestro modelo para crear los objetos
+    final topAnimeResponse =
+        TopAnimeResponse.fromRawJson(json.decode(data.body));
 
-      var itemCount = listaAnimes.length;
-      print('Número de animes obtenidos: $itemCount.');
-      ;
-      print('Nombre del primer anime: ${listaAnimes[0]['title']}');
-    } else {
-      print('Error en la petición: ${response.statusCode}');
-    }
+    onDisplayAnime = topAnimeResponse.data;
   }
 }
