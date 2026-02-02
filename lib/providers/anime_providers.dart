@@ -6,6 +6,7 @@ class AnimeProvider extends ChangeNotifier {
   List<Anime> onDisplayAnime = [];
   AnimeProvider() {
     print('Proveedor de animes inicializado.');
+    print('Prueba de subida');
     this.getOnDisplayAnime();
   }
 
