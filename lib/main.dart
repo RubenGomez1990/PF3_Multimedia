@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/providers/anime_providers.dart';
 import 'package:movies_app/screens/screens.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(AppState());
+
+class AppState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+        providers: [ChangeNotifierProvider(create: (_) => AnimeProvider())]);
+  }
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -16,8 +26,8 @@ class MyApp extends StatelessWidget {
         'home': (BuildContext context) => const HomeScreen(),
         'details': (BuildContext context) => const DetailsScreen(),
       },
-      theme: ThemeData.light()
-          .copyWith(appBarTheme: const AppBarTheme(backgroundColor: Colors.indigo)),
+      theme: ThemeData.light().copyWith(
+          appBarTheme: const AppBarTheme(backgroundColor: Colors.indigo)),
     );
   }
 }
