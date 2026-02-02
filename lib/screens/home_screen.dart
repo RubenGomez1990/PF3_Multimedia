@@ -8,6 +8,13 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final animeProvider = Provider.of<AnimeProvider>(context);
 
+    // Comprobación de si la lista está vacía o no, si está vacía muestra un cargando
+    // hasta que la lista esté cargada.
+    if (animeProvider.onDisplayAnime.isEmpty) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Cartellera'),
