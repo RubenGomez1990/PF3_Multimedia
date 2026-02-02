@@ -21,6 +21,7 @@ class AnimeProvider extends ChangeNotifier {
     final topAnimeResponse = TopAnimeResponse.fromJson(json.decode(data.body));
 
     onDisplayAnime = topAnimeResponse.data;
-    print('Animes cargados: ${onDisplayAnime.length}');
+
+    notifyListeners();
   }
 }

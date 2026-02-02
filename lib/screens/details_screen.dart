@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:movies_app/widgets/widgets.dart';
 
 class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     // TODO: Canviar després per una instància de Peli

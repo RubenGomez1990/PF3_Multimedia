@@ -77,6 +77,13 @@ class Anime {
     required this.demographics,
   });
 
+  //Creamos un getter algo diferente dado que para acceder a Images es un mapa con más carpetas dentro
+  // y establecemos una por defecto si no funciona.
+  get fullImagesPath {
+    return images['jpg']?.largeImageUrl ??
+        'https://i.stack.imgur.com/GNhxO.png';
+  }
+
   factory Anime.fromRawJson(String str) => Anime.fromJson(json.decode(str));
 
   factory Anime.fromJson(Map<String, dynamic> json) => Anime(
