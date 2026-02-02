@@ -6,7 +6,6 @@ class AnimeProvider extends ChangeNotifier {
   List<Anime> onDisplayAnime = [];
   AnimeProvider() {
     print('Proveedor de animes inicializado.');
-    print('Prueba de subida');
     this.getOnDisplayAnime();
   }
 
@@ -19,9 +18,9 @@ class AnimeProvider extends ChangeNotifier {
     final data = await http.get(url);
     // Primero cogemos todo el texto del JSON, usamos decode para procesarlo
     // y luego usamos nuestro modelo para crear los objetos
-    final topAnimeResponse =
-        TopAnimeResponse.fromRawJson(json.decode(data.body));
+    final topAnimeResponse = TopAnimeResponse.fromJson(json.decode(data.body));
 
     onDisplayAnime = topAnimeResponse.data;
+    print('Animes cargados: ${onDisplayAnime.length}');
   }
 }

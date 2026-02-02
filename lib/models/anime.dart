@@ -85,31 +85,31 @@ class Anime {
         images: Map.from(json["images"])
             .map((k, v) => MapEntry<String, Image>(k, Image.fromJson(v))),
         trailer: Trailer.fromJson(json["trailer"]),
-        approved: json["approved"],
+        approved: json["approved"] ?? false,
         titles: List<Title>.from(json["titles"].map((x) => Title.fromJson(x))),
-        title: json["title"],
-        titleEnglish: json["title_english"],
-        titleJapanese: json["title_japanese"],
+        title: json["title"] ?? 'No Title',
+        titleEnglish: json["title_english"] ?? '',
+        titleJapanese: json["title_japanese"] ?? '',
         titleSynonyms: List<String>.from(json["title_synonyms"].map((x) => x)),
-        type: json["type"],
-        source: json["source"],
-        episodes: json["episodes"],
-        status: json["status"],
-        airing: json["airing"],
+        type: json["type"] ?? '',
+        source: json["source"] ?? '',
+        episodes: json["episodes"] ?? 0,
+        status: json["status"] ?? '',
+        airing: json["airing"] ?? false,
         aired: Aired.fromJson(json["aired"]),
-        duration: json["duration"],
-        rating: json["rating"],
-        score: json["score"].toDouble(),
-        scoredBy: json["scored_by"],
-        rank: json["rank"],
-        popularity: json["popularity"],
-        members: json["members"],
-        favorites: json["favorites"],
-        synopsis: json["synopsis"],
-        background: json["background"],
-        season: json["season"],
-        year: json["year"],
-        broadcast: Broadcast.fromJson(json["broadcast"]),
+        duration: json["duration"] ?? '',
+        rating: json["rating"] ?? '',
+        score: (json["score"] ?? 0.0).toDouble(),
+        scoredBy: json["scored_by"] ?? 0,
+        rank: json["rank"] ?? 0,
+        popularity: json["popularity"] ?? 0,
+        members: json["members"] ?? 0,
+        favorites: json["favorites"] ?? 0,
+        synopsis: json["synopsis"] ?? '',
+        background: json["background"] ?? '',
+        season: json["season"] ?? '',
+        year: json["year"] ?? 0,
+        broadcast: Broadcast.fromJson(json["broadcast"] ?? {}),
         producers: List<Demographic>.from(
             json["producers"].map((x) => Demographic.fromJson(x))),
         licensors: List<Demographic>.from(
@@ -131,7 +131,7 @@ class Anime {
         "url": url,
         "images": Map.from(images)
             .map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
-        "trailer": trailer.toJson(),
+        "trailer": trailer,
         "approved": approved,
         "titles": List<dynamic>.from(titles.map((x) => x.toJson())),
         "title": title,
@@ -143,7 +143,7 @@ class Anime {
         "episodes": episodes,
         "status": status,
         "airing": airing,
-        "aired": aired.toJson(),
+        "aired": aired,
         "duration": duration,
         "rating": rating,
         "score": score,
@@ -156,7 +156,7 @@ class Anime {
         "background": background,
         "season": season,
         "year": year,
-        "broadcast": broadcast.toJson(),
+        "broadcast": broadcast,
         "producers": List<dynamic>.from(producers.map((x) => x.toJson())),
         "licensors": List<dynamic>.from(licensors.map((x) => x.toJson())),
         "studios": List<dynamic>.from(studios.map((x) => x.toJson())),
@@ -168,106 +168,71 @@ class Anime {
 }
 
 class Aired {
-  DateTime from;
-  DateTime to;
-  Prop prop;
-  String string;
+  DateTime? from;
+  DateTime? to;
+  Prop? prop;
+  String? string;
 
   Aired({
-    required this.from,
-    required this.to,
-    required this.prop,
-    required this.string,
+    this.from,
+    this.to,
+    this.prop,
+    this.string,
   });
 
-  factory Aired.fromRawJson(String str) => Aired.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
   factory Aired.fromJson(Map<String, dynamic> json) => Aired(
-        from: DateTime.parse(json["from"]),
-        to: DateTime.parse(json["to"]),
-        prop: Prop.fromJson(json["prop"]),
+        from: json["from"] == null ? null : DateTime.parse(json["from"]),
+        to: json["to"] == null ? null : DateTime.parse(json["to"]),
+        prop: json["prop"] == null ? null : Prop.fromJson(json["prop"]),
         string: json["string"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "from": from.toIso8601String(),
-        "to": to.toIso8601String(),
-        "prop": prop.toJson(),
-        "string": string,
-      };
 }
 
 class Prop {
-  From from;
-  From to;
+  From? from;
+  From? to;
 
   Prop({
-    required this.from,
-    required this.to,
+    this.from,
+    this.to,
   });
 
-  factory Prop.fromRawJson(String str) => Prop.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
   factory Prop.fromJson(Map<String, dynamic> json) => Prop(
-        from: From.fromJson(json["from"]),
-        to: From.fromJson(json["to"]),
+        from: json["from"] == null ? null : From.fromJson(json["from"]),
+        to: json["to"] == null ? null : From.fromJson(json["to"]),
       );
-
-  Map<String, dynamic> toJson() => {
-        "from": from.toJson(),
-        "to": to.toJson(),
-      };
 }
 
 class From {
-  int day;
-  int month;
-  int year;
+  int? day;
+  int? month;
+  int? year;
 
   From({
-    required this.day,
-    required this.month,
-    required this.year,
+    this.day,
+    this.month,
+    this.year,
   });
-
-  factory From.fromRawJson(String str) => From.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory From.fromJson(Map<String, dynamic> json) => From(
         day: json["day"],
         month: json["month"],
         year: json["year"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "day": day,
-        "month": month,
-        "year": year,
-      };
 }
 
 class Broadcast {
-  String day;
-  String time;
-  String timezone;
-  String string;
+  String? day; // Añadimos ?
+  String? time; // Añadimos ?
+  String? timezone; // Añadimos ?
+  String? string; // Añadimos ?
 
   Broadcast({
-    required this.day,
-    required this.time,
-    required this.timezone,
-    required this.string,
+    this.day,
+    this.time,
+    this.timezone,
+    this.string,
   });
-
-  factory Broadcast.fromRawJson(String str) =>
-      Broadcast.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory Broadcast.fromJson(Map<String, dynamic> json) => Broadcast(
         day: json["day"],
@@ -275,20 +240,13 @@ class Broadcast {
         timezone: json["timezone"],
         string: json["string"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "day": day,
-        "time": time,
-        "timezone": timezone,
-        "string": string,
-      };
 }
 
 class Demographic {
-  int malId;
-  String type;
-  String name;
-  String url;
+  int? malId;
+  String? type;
+  String? name;
+  String? url;
 
   Demographic({
     required this.malId,
@@ -372,7 +330,7 @@ class Title {
 class Trailer {
   dynamic youtubeId;
   dynamic url;
-  String embedUrl;
+  String? embedUrl;
   Images images;
 
   Trailer({
@@ -384,29 +342,20 @@ class Trailer {
 
   factory Trailer.fromRawJson(String str) => Trailer.fromJson(json.decode(str));
 
-  String toRawJson() => json.encode(toJson());
-
   factory Trailer.fromJson(Map<String, dynamic> json) => Trailer(
         youtubeId: json["youtube_id"],
         url: json["url"],
         embedUrl: json["embed_url"],
-        images: Images.fromJson(json["images"]),
+        images: Images.fromJson(json["images"] ?? {}),
       );
-
-  Map<String, dynamic> toJson() => {
-        "youtube_id": youtubeId,
-        "url": url,
-        "embed_url": embedUrl,
-        "images": images.toJson(),
-      };
 }
 
 class Images {
-  dynamic imageUrl;
-  dynamic smallImageUrl;
-  dynamic mediumImageUrl;
-  dynamic largeImageUrl;
-  dynamic maximumImageUrl;
+  String? imageUrl; // Cambia a String?
+  String? smallImageUrl;
+  String? mediumImageUrl;
+  String? largeImageUrl;
+  String? maximumImageUrl;
 
   Images({
     this.imageUrl,
@@ -415,10 +364,6 @@ class Images {
     this.largeImageUrl,
     this.maximumImageUrl,
   });
-
-  factory Images.fromRawJson(String str) => Images.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory Images.fromJson(Map<String, dynamic> json) => Images(
         imageUrl: json["image_url"],
