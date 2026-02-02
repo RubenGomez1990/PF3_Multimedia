@@ -9,13 +9,15 @@ class AppState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [ChangeNotifierProvider(create: (_) => AnimeProvider())]);
+      providers: [
+        ChangeNotifierProvider(create: (_) => AnimeProvider(), lazy: false)
+      ],
+      child: MyApp(),
+    );
   }
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
