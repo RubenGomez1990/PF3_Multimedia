@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/models/anime.dart';
 
 class MovieSlider extends StatelessWidget {
-  const MovieSlider({super.key});
+  final List<Anime> animes;
+  final String? title;
 
-  // const MovieSlider({Key? key}) : super(key: key);
+  const MovieSlider({super.key, required this.animes, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +16,22 @@ class MovieSlider extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Populars',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          ),
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(title!,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
           const SizedBox(height: 5),
           Expanded(
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 20,
-                itemBuilder: (_, int index) => const _MoviePoster()),
-          )
+                itemCount:
+                    animes.length, // Longitud de la lista para evitar errores.
+                itemBuilder: (_, int index) =>
+                    _MoviePoster(anime: animes[index])),
+          ),
         ],
       ),
     );
@@ -33,7 +39,9 @@ class MovieSlider extends StatelessWidget {
 }
 
 class _MoviePoster extends StatelessWidget {
-  const _MoviePoster({Key? key}) : super(key: key);
+  final Anime anime;
+
+  const _MoviePoster({required this.anime});
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +53,13 @@ class _MoviePoster extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () => Navigator.pushNamed(context, 'details',
-                arguments: 'detalls peli'),
+            onTap: () =>
+                Navigator.pushNamed(context, 'details', arguments: anime),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: const FadeInImage(
-                placeholder: AssetImage('assets/no-image.jpg'),
-                image: NetworkImage('https://placehold.co/300x400/png'),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: NetworkImage(anime.fullImagesPath),
                 width: 130,
                 height: 190,
                 fit: BoxFit.cover,
@@ -61,8 +69,8 @@ class _MoviePoster extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            'Star Wars: El retorno del Jedi',
+          Text(
+            anime.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
