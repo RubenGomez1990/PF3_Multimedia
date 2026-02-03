@@ -6,6 +6,7 @@ class AnimeProvider extends ChangeNotifier {
   String _baseUrl = 'api.jikan.moe';
   List<Anime> onDisplayAnime = [];
   List<Anime> seasonalAnimes = [];
+  Map<int, List<Datum>> personajes = {};
 
   AnimeProvider() {
     print('Proveedor de animes inicializado.');
@@ -14,7 +15,7 @@ class AnimeProvider extends ChangeNotifier {
   }
 
   getOnDisplayAnime() async {
-    print('getOnDisplayAnime');
+    print('getOnTopAnime');
 
     // Buscamos los animes top de temporada
     // Usamos data porque los resultados de esta API se llaman data.
@@ -46,5 +47,19 @@ class AnimeProvider extends ChangeNotifier {
     } else {
       print('Error en Seasonal: ${data.statusCode}');
     }
+  }
+
+  Future<List<Datum>> getCharacters(int idAnime) async {
+    print('getOnCharacters');
+    var url = Uri.https(_baseUrl, '/v4/anime/$idAnime/characters');
+    final data = await http.get(url);
+
+    if (data.statusCode == 200) {
+      final characterResponse =
+          CharactersResponse.fromJson(json.decode(data.body));
+      personajes[idAnime] = characterResponse.data;
+      return characterResponse.data;
+    }
+    return [];
   }
 }

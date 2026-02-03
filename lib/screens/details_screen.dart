@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/models/models.dart';
 import 'package:movies_app/widgets/widgets.dart';
 
 class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: Canviar després per una instància de Peli
-    // final String pelicula =
-    //ModalRoute.of(context)?.settings.arguments.toString() ?? 'no-movie';
+    final Anime serie = ModalRoute.of(context)?.settings.arguments as Anime;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          _CustomAppBar(),
+          _CustomAppBar(anime: serie),
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                _PosterAndTitile(),
-                _Overview(),
-                _Overview(),
-                const CastingCards(),
+                _PosterAndTitile(anime: serie),
+                _Overview(anime: serie),
+                CastingCards(
+                  idAnime: serie.malId,
+                ),
               ],
             ),
           ),
@@ -29,13 +29,14 @@ class DetailsScreen extends StatelessWidget {
 }
 
 class _CustomAppBar extends StatelessWidget {
+  final Anime anime;
+  const _CustomAppBar({required this.anime});
+
   @override
   Widget build(BuildContext context) {
-    // Exactament igual que la AppBaer però amb bon comportament davant scroll
     return SliverAppBar(
       backgroundColor: Colors.indigo,
       expandedHeight: 200,
-      floating: false,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
@@ -43,16 +44,34 @@ class _CustomAppBar extends StatelessWidget {
         title: Container(
           width: double.infinity,
           alignment: Alignment.bottomCenter,
-          color: Colors.black12,
-          padding: const EdgeInsets.only(bottom: 10),
-          child: const Text(
-            'Títol peli',
-            style: TextStyle(fontSize: 16),
+          padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+          // Aplicamos un degradado para que el texto blanco sea legible
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.7, 1.0], // Empieza a oscurecer casi al final
+              colors: [
+                Colors.transparent,
+                Colors.black54, // Sombra suave en la base
+              ],
+            ),
+          ),
+          child: Text(
+            anime.title,
+            style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white, // El blanco es el mejor color para esto
+                shadows: [
+                  Shadow(
+                      offset: Offset(0, 1), blurRadius: 3, color: Colors.black)
+                ]),
+            textAlign: TextAlign.center,
           ),
         ),
-        background: const FadeInImage(
-          placeholder: AssetImage('assets/loading.gif'),
-          image: NetworkImage('https://placehold.co/500x300/png'),
+        background: FadeInImage(
+          placeholder: const AssetImage('assets/loading.gif'),
+          image: NetworkImage(anime.fullImagesPath),
           fit: BoxFit.cover,
         ),
       ),
@@ -61,9 +80,13 @@ class _CustomAppBar extends StatelessWidget {
 }
 
 class _PosterAndTitile extends StatelessWidget {
+  final Anime anime;
+  const _PosterAndTitile({required this.anime});
+
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+
     return Container(
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -71,37 +94,36 @@ class _PosterAndTitile extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: const FadeInImage(
-              placeholder: AssetImage('assets/loading.gif'),
-              image: NetworkImage('https://placehold.co/200x300/png'),
+            child: FadeInImage(
+              placeholder: const AssetImage('assets/loading.gif'),
+              image: NetworkImage(anime.fullImagesPath),
               height: 150,
             ),
           ),
-          const SizedBox(
-            width: 20,
-          ),
-          Column(
-            children: [
-              Text(
-                'Títol peli',
-                style: textTheme.headlineSmall,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-              Text(
-                'Títol original',
-                style: textTheme.titleMedium,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.star_outline, size: 15, color: Colors.grey),
-                  const SizedBox(width: 5),
-                  Text('Nota mitjana', style: textTheme.bodySmall),
-                ],
-              )
-            ],
+          const SizedBox(width: 20),
+          // Usamos Expanded para que el texto no se desborde
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(anime.title,
+                    style: textTheme.headlineSmall,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2),
+                Text(anime.titleJapanese,
+                    style: textTheme.titleMedium,
+                    overflow: TextOverflow.ellipsis),
+                Row(
+                  children: [
+                    const Icon(Icons.star_outline,
+                        size: 15, color: Colors.grey),
+                    const SizedBox(width: 5),
+                    Text('${anime.score}',
+                        style: textTheme.bodySmall), // Nota real
+                  ],
+                )
+              ],
+            ),
           )
         ],
       ),
@@ -110,12 +132,17 @@ class _PosterAndTitile extends StatelessWidget {
 }
 
 class _Overview extends StatelessWidget {
+  final Anime anime;
+
+  const _Overview({required this.anime});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Text(
-        'Labore eiusmod ad reprehenderit irure eu sunt ex minim. Lorem fugiat Lorem proident duis ea cupidatat. Commodo duis culpa reprehenderit ad elit. Velit duis officia reprehenderit ullamco sint id anim officia est. Enim mollit nisi et exercitation dolore commodo. Cillum mollit laborum non nulla cillum non do reprehenderit Lorem deserunt ex eu sunt do.',
+        anime
+            .synopsis, // Asi es como se llama el campo overview en api.jikan.moe
         textAlign: TextAlign.justify,
         style: Theme.of(context).textTheme.titleMedium,
       ),
