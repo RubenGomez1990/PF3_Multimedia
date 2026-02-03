@@ -10,11 +10,10 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cartellera'),
+        title: const Text('Top Animes',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.transparent, // O el color de tu fondo
         elevation: 0,
-        actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.search_outlined))
-        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -25,8 +24,7 @@ class HomeScreen extends StatelessWidget {
 
               // Slider de pel·licules
               MovieSlider(
-                  animes: animeProvider.seasonalAnimes,
-                  title: 'Temporada Actual'),
+                  animes: animeProvider.seasonalAnimes, title: 'Actual Season'),
               // Poodeu fer la prova d'afegir-ne uns quants, veureu com cada llista és independent
               // MovieSlider(),
               // MovieSlider(),
